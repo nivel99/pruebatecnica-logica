@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados</title>
+</head>
+<body>
+    <h1>Resultados</h1>
+    
+    <h2>Pregunta 1</h2>
+    <ul id="artists">
+    </ul>
+
+    <h2>Pregunta 2</h2>
+    <p>Total de copias vendidas: <span id="totalSales"></span></p>
+
+    <h2>Pregunta 3</h2>
+    <ul id="longNames">
+    </ul>
+
+    <h2>Pregunta 5</h2>
+    <button onclick="borrarArtistas()">Borrar Adele, Prince y Justin Bieber</button><br>
+    <button onclick="agregarArtista()">Agregar Radiohead con Ok Computer</button><br>
+    <br>
+    <input type="text" id="searchInput" placeholder="Buscar por nombre...">
+    <button onclick="buscarArtista()">Buscar</button>
+    <ul id="searchResults"></ul>
+
+    <script>
+        //Nota: solo se uso la logica necesaria y mas optima sin codigo basura que no haga nada
+        const musicData = [
+            { artist: 'Adele', name: '25', sales: 1731000 },
+            { artist: 'Drake', name: 'Views', sales: 1608000 },
+            { artist: 'Beyonce', name: 'Lemonade', sales: 1554000 },
+            { artist: 'Chris Stapleton', name: 'Traveller', sales: 1085000 },
+            { artist: 'Pentatonix', name: 'A Pentatonix Christmas', sales: 904000 },
+            { artist: 'Original Broadway Cast Recording', name: 'Hamilton: An American Musical', sales: 820000 },
+            { artist: 'Twenty One Pilots', name: 'Blurryface', sales: 738000 },
+            { artist: 'Prince', name: 'The Very Best of Prince', sales: 668000 },
+            { artist: 'Rihanna', name: 'Anti', sales: 603000 },
+            { artist: 'Justin Bieber', name: 'Purpose', sales: 554000 }
+        ];
+
+        // Pregunta 1 de la entrevista tecnica
+        const filteredAlbums = musicData.filter(album => album.sales > 1000000);
+        const artistList = document.getElementById('artists');
+        filteredAlbums.forEach(album => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${album.artist} es un gran artista`;
+            artistList.appendChild(listItem);
+        });
+
+        // Pregunta 2 de la entrevista tecnica
+        const totalAlbumSales = musicData.reduce((acc, album) => acc + album.sales, 0);
+        document.getElementById('totalSales').textContent = totalAlbumSales.toLocaleString();
+
+        // Pregunta 3 de la entrevista
+        const longNames = musicData.filter(album => album.name.length > 8);
+        const longNamesList = document.getElementById('longNames');
+        longNames.forEach(album => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${album.artist} tiene un nombre muy grande`;
+            longNamesList.appendChild(listItem);
+        });
+
+        // Pregunta 4 y 5 de la entrevista
+        function buscarArtista() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchResults = musicData.filter(album => album.name.toLowerCase().includes(searchTerm));
+            const searchResultsList = document.getElementById('searchResults');
+            searchResultsList.innerHTML = '';
+            searchResults.forEach(album => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `El álbum ${album.name} del artista ${album.artist} vendió aproximadamente ${album.sales.toLocaleString()} copias.`;
+                searchResultsList.appendChild(listItem);
+            });
+        }
+
+        function agregarArtista() {
+            const newAlbum = { artist: 'Radiohead', name: 'Ok Computer', sales: 5000000 };
+            musicData.push(newAlbum);
+            buscarArtista();
+        }
+
+        function borrarArtistas() {
+            const artistsToDelete = ['Adele', 'Prince', 'Justin Bieber'];
+            artistsToDelete.forEach(artist => {
+                const index = musicData.findIndex(album => album.artist === artist);
+                if (index !== -1) {
+                    musicData.splice(index, 1);
+                }
+            });
+            buscarArtista();
+        }
+    </script>
+</body>
+</html>
